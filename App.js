@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   Platform,
@@ -11,6 +5,7 @@ import {
   Text,
   View
 } from 'react-native';
+import firebase from 'react-native-firebase';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -19,8 +14,30 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-type Props = {};
-export default class App extends Component<Props> {
+export default class App extends Component {
+
+  componentDidMount() {
+    // What happens when user taps notification
+    firebase.messaging().getInitialNotification()
+    .then(data => {
+      console.warn(data);
+    })
+    .catch(console.error);
+
+    // receiving fcm registration token
+    firebase.messaging().getToken()
+    .then(data => {
+      console.warn(data);
+    })
+    .catch(console.error);
+
+    // Notification arrives when the app is running
+    firebase.messaging().onMessage(data => {
+      console.log('Push Notification received');
+      console.warn(data);
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
